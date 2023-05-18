@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Weather</title>
+    <link id="favicon" rel="icon" type="image/png" href="./img/icons/64x64/day/116.png">
+    <link rel="stylesheet" href="./css/indexCSS.css">
+    <link href="https://fonts.cdnfonts.com/css/adobe-clean" rel="stylesheet">
+
+</head>
+<body>
+<video autoplay muted loop id="container">
+    <source src="https://assets.codepen.io/3364143/7btrrd.mp4" type="video/mp4">
+</video>
+    <div id="screenBack">
+        <div id="header">
+            <div id="buttonsCMZ">
+                <div style="background-color: brown" class="optionsCMZ"></div>
+                <div style="background-color: peru" class="optionsCMZ"></div>
+                <div style="background-color: forestgreen" class="optionsCMZ"></div>
+            </div>
+            <input id="newLocation" type="text" autocomplete="off" placeholder="Search location">
+            <div id="headerLinks">
+            <a class="headerAtag" href="index.html"><div id="current" style="color: var(--textFocused); border-bottom: 2px solid var(--textFocused);" class="headerHREF">Home Page</div></a>
+            <a class="headerAtag" href="index.html"><div class="headerHREF">Forecast</div></a>
+            <a class="headerAtag" href="index.html"><div class="headerHREF">Rainfall</div></a>
+            <a class="headerAtag" href="index.html"><div class="headerHREF">Ambiguous</div></a>
+            </div>
+        </div>
+        <div id="content">
+            <div id="sidebar">
+                <div class="sidebarContainer" id="forecast"><b>Forecast:</b>
+                    <a class="sidebarHREF" href="" target="_self">Hourly Forecast</a>
+                    <a class="sidebarHREF" href="" target="_self">Air Quality Index</a>
+                </div>
+                <div class="sidebarContainer" id="history"><b>History:</b>
+                    <a class="sidebarHREF" href="" target="_self">Daily Information</a>
+                    <a class="sidebarHREF" href="" target="_self">Air Quality Index</a>
+                </div>
+                <div class="sidebarContainer" id="astronomicalInfo"><b>Astronomical Info:</b>
+                    <a class="sidebarHREF" href="" target="_self">Information</a>
+                </div>
+                <div class="sidebarContainer" id="sports"><b>Sports:</b>
+                    <a class="sidebarHREF" href="" target="_self">Football</a>
+                    <a class="sidebarHREF" href="" target="_self">Cricket</a>
+                    <a class="sidebarHREF" href="" target="_self">Golf</a>
+                </div>
+                <div class="sidebarContainer" id="historyTest"><b>History:</b>
+                    <a class="sidebarHREF" href="" target="_self">Daily Information</a>
+                    <a class="sidebarHREF" href="" target="_self">Air Quality Index</a>
+                </div>
+            </div>
+            <div id="mainContent">
+                <div id="temp">
+                <div id="mainDisplay">
+                </div>
+                </div>
+                <div id="secondaryDisplay"></div>
+            </div>
+        </div>
+    </div>
+<script type="text/javascript" src="./js/index.js"></script>
+</body>
+</html>
