@@ -1,12 +1,16 @@
 document.addEventListener("DOMContentLoaded", ()=>{
-    let inputLocation = document.getElementById("newLocation")
-    let headerLinks = document.getElementById("headerLinks")
-    let currentLink = document.getElementById("current")
-    let xScrollFirst = document.getElementById("temp")
-    let mainDisplay = document.getElementById("mainDisplay")
-    let userLocation = "Dubai"
-    let currentTime = new Date()
+    let inputLocation = document.getElementById("newLocation");
+    let headerLinks = document.getElementById("headerLinks");
+    let currentLink = document.getElementById("current");
+    let xScrollFirst = document.getElementById("temp");
+    let mainDisplay = document.getElementById("mainDisplay");
+    let userLocation = "Dubai";
+    let currentTime = new Date();
+    let loadingHome = document.getElementById("loadingHomeForecast");
+    let heading = document.getElementById("heading");
+    let homeForecast;
     let API_KEY;
+    let heatmap = false;
     if(navigator.geolocation){
         navigator.geolocation.getCurrentPosition(function(position){
             const latitude = position.coords.latitude;
@@ -14,31 +18,70 @@ document.addEventListener("DOMContentLoaded", ()=>{
             userLocation = latitude + "," + longitude;
         })
     }
-    //add mechanism for adding all the divs from the given information using fetch request
-    fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHERE&q="+ userLocation + "&days=1&aqi=no&alerts=no")
+    fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHEREq="+ "London" + "&days=2&aqi=no&alerts=no")
         .then(response => response.json())
         .then(object => {
             let {forecast:{forecastday}} = object
             let {hour} = forecastday[0]
-            let now = currentTime.getHours()
-            for(let i = 0; i < hour.length-now; i++){
-                let weatherInformation = document.createElement("div")
-                weatherInformation.className = "homeForecast"
-                weatherInformation.style.backgroundImage = "url(" +hour[now+i].condition.icon + ")"
-                weatherInformation.innerHTML = "<h2>" + Math.round(hour[now+i].temp_c) + "°C</h2>" +
-                    "<p>" + (now+i) + ":00<br>" + hour[now+i].condition.text + "</p>"
+            let {hour: hourNext} = forecastday[1]
+            let {location:{name, country, localtime}} = object;
+            let now = parseInt(localtime.split(" ").at(-1).split(":")[0])
+            heading.innerHTML = "<div><h1 id=\"Location\">"+ name+ ",</h1><h2>"+ country+ "</h2></div>\n" +
+                "                    <div id=\"rightClock\"><h1>"+ localtime.split(" ").at(-1) +"</h1>\n" +
+                "                        <div id=\"heatmapSwitch\">Show heatmap</div>";
+            let heatButton = document.getElementById("heatmapSwitch");
+            function addDiv(weatherInformation, tempC){
+                weatherInformation.setAttribute("data-value", tempC.toString())
                 weatherInformation.addEventListener("mouseenter", ()=>{
-                    weatherInformation.style.backgroundColor = "rgba(" + 6*Math.round(hour[now+i].temp_c)+ ", 90, 40, 1)"
+                    weatherInformation.style.backgroundColor = "rgba(" + 6*tempC+ ", "+ (180 - tempC) + ", "+ (255 - 6*tempC) + ", 1)"
                 })
+                weatherInformation.addEventListener("mouseleave", ()=>{
+                    if(!heatmap) {
+                        weatherInformation.style.backgroundColor = "rgba(0, 0, 0, 0)"
+                    }
+                })
+                loadingHome.style.display = "none";
                 mainDisplay.appendChild(weatherInformation)
             }
-            // for(let step of hour){
-            //     let weatherInformation = document.createElement("div")
-            //     weatherInformation.className = "homeForecast"
-            //     weatherInformation.style.backgroundImage = "url(" +step.condition.icon + ")"
-            //     mainDisplay.appendChild(weatherInformation)
-            // }
+            for(let i = 0; i < hour.length-now; i++){
+                let weatherInformation = document.createElement("div")
+                let description = hour[now+i].condition.text.split(" ").splice(0, 2).join(" ")
+                let tempC = Math.round(hour[now+i].temp_c);
+                weatherInformation.className = "homeForecast"
+                weatherInformation.style.backgroundImage = "url(" +hour[now+i].condition.icon + ")"
+                weatherInformation.innerHTML = "<h2>" + tempC + "°C</h2>" +
+                    "<p>" + (now+i) + ":00<br>" + description + "</p>"
+                addDiv(weatherInformation, tempC)
+            }
+            for(let i = 0; i < now; i++){
+                let weatherInformation = document.createElement("div")
+                let description = hourNext[i].condition.text.split(" ").splice(0, 2).join(" ")
+                let tempC = Math.round(hourNext[i].temp_c);
+                weatherInformation.className = "homeForecast"
+                weatherInformation.style.backgroundImage = "url(" +hourNext[i].condition.icon + ")"
+                weatherInformation.innerHTML = "<h2>" + tempC + "°C</h2>" +
+                    "<p>" + (i) + ":00<br>" + description + "</p>"
+                addDiv(weatherInformation, tempC)
+            }
+            heatButton.addEventListener("mousedown", ()=>{
+                if (!heatmap) {
+                    for (let forecast of homeForecast) {
+                        let tempC = parseInt(forecast.getAttribute("data-value"))
+                        console.log(tempC)
+                        forecast.style.backgroundColor = "rgba(" + 6 * tempC + ", " + (180 - tempC) + ", " + (255 - 6 * tempC) + ", 1)"
+                        heatmap = true
+                    }
+                } else {
+                    for (let forecast of homeForecast) {
+                        let tempC = parseInt(forecast.getAttribute("data-value"))
+                        forecast.style.backgroundColor = "rgba(0, 0, 0, 0)"
+                        heatmap = false
+                    }
+                }
+            })
+            homeForecast=document.getElementsByClassName("homeForecast");
         })
+        .catch(error => console.log(error))
     inputLocation.addEventListener("focus", ()=>{
         headerLinks.style.zIndex = "-10"
         headerLinks.style.left = "30%";
@@ -56,5 +99,4 @@ document.addEventListener("DOMContentLoaded", ()=>{
             xScrollFirst.scrollLeft -= 10;
         }
     })
-    
 })

@@ -20,8 +20,17 @@ html, body {
     position: absolute;
     top: 0;
     left: 0;
+    /*min-width: 100vw;*/
+    min-height: 100%;
+    object-fit: cover;
+    overflow-y: hidden;
+    /*height: 100vh;*/
     /*background-color: blue;*/
 }
+/*#testA{*/
+/*    width: 100vw;*/
+/*    height: 100vh;*/
+/*}*/
 
 #screenBack{
     background-color: var(--backgroundContainer);
@@ -123,7 +132,7 @@ html, body {
     top: -35%;
     left: -10%;
     height: 100%;
-    color: var(--textDormant);
+    color: rgba(255, 255, 255, 0.5);
     border-bottom: 2px solid rgba(255, 255, 255, 0);
     transition: color 0.3s ease, border-bottom-color 0.5s ease;
 }
@@ -199,11 +208,12 @@ a:active{
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     position: relative;
     width: 90%;
-    height: 33%;
+    height: 35%;
     margin: 4% 5% 2.5% 5%;
     border-radius: 2vh;
     overflow-x: auto;
     overflow-y: hidden;
+    transition: top 1s ease;
 }
 #temp::-webkit-scrollbar{
     display: none;
@@ -214,6 +224,7 @@ a:active{
     padding: 0;
 }
 .homeForecast{
+    /*display: none;*/
     flex: 0 0 auto;
     position: relative;
     width: 13%;
@@ -232,12 +243,78 @@ a:active{
     background-position: center center;
     z-index: 50;
     box-sizing: border-box;
-    transition: background-color 0.5s ease;
+    /*transition: background-color 0.5s ease;*/
 }
 .homeForecast:hover{
     background-color: var(--backgroundContainer);
 }
 .homeForecast p{
     position: relative;
-    top: 32%;
+    top: 25%;
+    font-size: 2vh;
+}
+
+.loading {
+    position: relative;
+    left: 45%;
+    top: 30%;
+    height: 7vh;
+    width: 7vh;
+    border-radius: 50%;
+    border-bottom: 1.5vh solid darkred;
+    border-left: 1.5vh solid darkolivegreen;
+    border-right: 1.5vh solid cornflowerblue;
+    border-top: 1.5vh solid coral;
+    animation: spin 1.5s linear infinite;
+}
+@keyframes spin {
+    0%{
+        transform: rotate(0deg);
+    }
+    100%{
+        transform: rotate(360deg);
+    }
+}
+
+#heading{
+    color: var(--textFocused);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr;
+    height: 10%;
+    margin: 1% 6% 5%;
+    padding-left: 1.5vh;
+    padding-right: 1.5vh;
+    line-height: 2.6vh;
+}
+#heading h1{
+    font-size: 5vh;
+}
+#heading h2{
+    font-size: 3vh;
+    /*color: var(--textDormant);*/
+}
+#rightClock{
+    text-align: right;
+}
+#heatmapSwitch{
+    display: grid;
+    position: relative;
+    top: -6%;
+    left: 75%;
+    width: 25%;
+    height: 25%;
+    border-radius: 2vh;
+    background-color: rgba(255, 255, 255, 0.07);
+    text-align: center;
+    align-items: center;
+    transition: left 0.5s ease, width 0.5s ease, height 0.5s ease;
+    font-size: 1vw;
+}
+#heatmapSwitch:hover{
+    background-color: rgba(255, 255, 255, 0.3);
+    left: 70%;
+    width: 30%;
+    height: 30%;
+    cursor: pointer;
 }
