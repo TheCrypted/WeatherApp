@@ -413,7 +413,7 @@ a:active{
 #wid1{
     background-color: var(--mainContentBox);
     background-image: url("/img/compassRose.png");
-    background-size: contain;
+    background-size: 80% 90%;
     background-repeat: no-repeat;
     background-position: center;
     margin: 10% 5% 5% 10%;
@@ -445,10 +445,61 @@ a:active{
     margin: 10% 10% 5% 5%;
 }
 #wid3{
-    background-color: cornflowerblue;
+    background-color: var(--mainContentBox);
+    font-size: 3vw;
+    color: var(--textFocused);
+    text-align: center;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
     margin: 5% 5% 10% 10%;
+    line-height: 1.9vh;
 }
+#wid3 h1{
+    position: relative;
+    left: -3%;
+    color: var(--textSemi);
+    font-size: 1.2vw;
+}
+#uvIndex{
+    background-image: linear-gradient(to right, green, yellow, coral, firebrick, purple);
+    position: relative;
+    left: 15%;
+    top: 25%;
+    width: 70%;
+    height: 20%;
+    border-radius: 2vh;
+    background-position: center;
+}
+#pointerUV{
+    background-color: black;
+    position: relative;
+    top: -20%;
+    left: 70%;
+    border-radius: 2vh;
+    width: 5%;
+    height: 140%;
+}
+
 #wid4{
-    background-color: darkred;
+    background-color: var(--mainContentBox);
+    font-size: 3vw;
+    color: var(--textFocused);
+    text-align: center;
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+    line-height: 2.5vh;
     margin: 5% 10% 10% 5%;
+}
+#wid4 h1{
+    position: relative;
+    left: -3%;
+    color: var(--textSemi);
+    font-size: 1.2vw;
+}
+#wid4 h3{
+    position: relative;
+    top: 10%;
+    font-size: 1.1vw;
 }
