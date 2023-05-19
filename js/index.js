@@ -27,15 +27,16 @@ document.addEventListener("DOMContentLoaded", ()=>{
             userLocation = latitude + "," + longitude;
         })
     }
-    let shiftY = Math.floor(0.3*(841 - window.innerHeight))
-    let shiftX = Math.floor(0.45*(1707 - window.innerWidth))
-    screenBack.style.height = (shiftY + 0.87*window.innerHeight) +  "px";
-    screenBack.style.width = (shiftX + 0.87*window.innerWidth) + "px";
-    screenBack.style.left = (0.065*window.innerWidth - shiftX/2)+"px";
-    screenBack.style.top = (0.06*window.innerHeight - shiftY/2)+"px";
-    
+    function resizeWindow(){
+        let shiftY = Math.floor(0.3 * (841 - window.innerHeight))
+        let shiftX = Math.floor(0.45 * (1707 - window.innerWidth))
+        screenBack.style.height = (shiftY + 0.87 * window.innerHeight) + "px";
+        screenBack.style.width = (shiftX + 0.87 * window.innerWidth) + "px";
+        screenBack.style.left = (0.065 * window.innerWidth - shiftX / 2) + "px";
+        screenBack.style.top = (0.06 * window.innerHeight - shiftY / 2) + "px";
+    }
     function fetchLocationPage(location){
-        fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHERE&q="+ location + "&days=2&aqi=no&alerts=no")
+        fetch("https://api.weatherapi.com/v1/forecast.json?key=e3b7fc6bd5fc457e91b202223231605&q="+ location + "&days=2&aqi=no&alerts=no")
             .then(response => response.json())
             .then(object => {
                 let {forecast:{forecastday}} = object
@@ -123,10 +124,14 @@ document.addEventListener("DOMContentLoaded", ()=>{
         currentLink.style.borderBottom = "2px solid rgba(255, 255, 255, 1)";
     })
     xScrollFirst.addEventListener("wheel", (event)=>{
+        event.preventDefault()
         if(event.deltaY > 0){
             xScrollFirst.scrollLeft += 10;
         } else if(event.deltaY < 0){
             xScrollFirst.scrollLeft -= 10;
         }
+    })
+    window.addEventListener("resize", ()=>{
+        resizeWindow()
     })
 })

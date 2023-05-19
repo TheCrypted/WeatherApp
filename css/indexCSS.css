@@ -3,6 +3,9 @@
     --textFocused: rgba(255, 255, 255, 1);
     --textDormant: rgba(107, 121, 124, 0.7);
     --backgroundSolid: rgba(3, 23, 30, 1);
+    --textSemi: rgba(255, 255, 255, 0.5);
+    --mainContentBox: rgba(255, 255, 255, 0.07);
+    --mainBoxShadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
 
 html, body {
@@ -132,7 +135,7 @@ html, body {
     top: -35%;
     left: -10%;
     height: 100%;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--textSemi);
     border-bottom: 2px solid rgba(255, 255, 255, 0);
     transition: color 0.3s ease, border-bottom-color 0.5s ease;
 }
@@ -181,7 +184,7 @@ a:active{
 }
 .sidebarContainer{
     margin: 2vw;
-    color: rgba(255, 255, 255, 0.5);
+    color: var(--textSemi);
     display: grid;
     width: 90%;
     grid-template-columns: 1fr;
@@ -203,8 +206,16 @@ a:active{
 #mainContent{
     overflow-x: hidden;
 }
+#mainContent::-webkit-scrollbar{
+    width: 1vh;
+    background-color: rgba(0, 0, 0, 0);
+}
+#mainContent::-webkit-scrollbar-thumb{
+    background-color: rgba(0, 0, 0, 0.4);
+    border-radius: 1vh;
+}
 #temp{
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: var(--mainContentBox);
     box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
     position: relative;
     width: 90%;
@@ -321,7 +332,7 @@ a:active{
     width: 30%;
     height: 30%;
     border-radius: 2vh;
-    background-color: rgba(255, 255, 255, 0.07);
+    background-color: var(--mainContentBox);
     text-align: center;
     align-items: center;
     transition: left 0.5s ease, width 0.5s ease, height 0.5s ease;
@@ -342,4 +353,102 @@ a:active{
     width: 100%;
     height: 100%;
     transition: width 2s ease;
+}
+#airOverview{
+    /*background-color: coral;*/
+    grid-area: airOverview;
+}
+#astronomyOverview{
+    /*background-color: cornflowerblue;*/
+    grid-area: astronomyOverview;
+}
+#currentOverview{
+    grid-area: currentOverview;
+}
+#widgetContainer{
+    width: 90%;
+    height: 80%;
+    box-shadow: var(--mainBoxShadow);
+    border-radius: 2vh;
+    background-color: var(--mainContentBox);
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 1fr 1fr;
+}
+#airOverview div{
+    width: 90%;
+    height: 65%;
+    box-shadow: var(--mainBoxShadow);
+    border-radius: 2vh;
+    background-color: var(--mainContentBox);
+}
+#astronomyOverview div{
+    width: 90%;
+    height: 60%;
+    box-shadow: var(--mainBoxShadow);
+    border-radius: 2vh;
+    background-color: var(--mainContentBox);
+}
+#secondaryDisplay h1{
+    color: var(--textSemi);
+    box-sizing: border-box;
+    padding-left: 5%;
+}
+#secondaryDisplay{
+    width: 90%;
+    height: 80%;
+    margin: 4% 5% 2.5% 5%;
+    display: grid;
+    grid-template-rows: 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    grid-template-areas:
+        "currentOverview airOverview"
+        "currentOverview astronomyOverview"
+;
+}
+.widgetOv{
+    border-radius: 2vh;
+    box-shadow: var(--mainBoxShadow);
+}
+#wid1{
+    background-color: var(--mainContentBox);
+    background-image: url("/img/compassRose.png");
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    margin: 10% 5% 5% 10%;
+}
+#wid1:hover,#wid2:hover, #wid3:hover, #wid4:hover{
+    cursor: pointer;
+    background-color: var(--backgroundContainer);
+}
+#pointerCompass{
+    width: 100%;
+    height: 100%;
+    background-size: 130% 150%;
+    background-position: center;
+    /*transform: rotate(45deg);*/
+    background-image: url("/img/compassPointer.png");
+    transition: transform 1s ease;
+}
+#pointerCompass:hover{
+    transform: rotate(317deg);
+}
+#wid2{
+    box-sizing: border-box;
+    background-color: var(--mainContentBox);
+    padding-left: 8%;
+    padding-top: 5%;
+    font-size: 1.1vw;
+    color: var(--textFocused);
+    line-height: 4.5vh;
+    margin: 10% 10% 5% 5%;
+}
+#wid3{
+    background-color: cornflowerblue;
+    margin: 5% 5% 10% 10%;
+}
+#wid4{
+    background-color: darkred;
+    margin: 5% 10% 10% 5%;
 }
