@@ -413,37 +413,73 @@ a:active{
 #wid1{
     background-color: var(--mainContentBox);
     background-image: url("/img/compassRose.png");
-    background-size: 80% 90%;
+    background-size: 60% 70%;
     background-repeat: no-repeat;
-    background-position: center;
+    background-position: center 85%;
+    text-align: center;
     margin: 10% 5% 5% 10%;
+}
+#wid1 h1{
+    position: relative;
+    left: -3%;
+    color: var(--textSemi);
+    font-size: 1.2vw;
 }
 #wid1:hover,#wid2:hover, #wid3:hover, #wid4:hover{
     cursor: pointer;
     background-color: var(--backgroundContainer);
 }
 #pointerCompass{
+    position: relative;
+    top: -18%;
     width: 100%;
     height: 100%;
-    background-size: 130% 150%;
+    background-size: 100% 120%;
     background-position: center;
     /*transform: rotate(45deg);*/
     background-image: url("/img/compassPointer.png");
     transition: transform 1s ease;
 }
-#pointerCompass:hover{
-    transform: rotate(317deg);
-}
 #wid2{
     box-sizing: border-box;
     background-color: var(--mainContentBox);
     padding-left: 8%;
-    padding-top: 5%;
+    padding-top: 0%;
     font-size: 1.1vw;
+    text-align: center;
     color: var(--textFocused);
     line-height: 4.5vh;
     margin: 10% 10% 5% 5%;
 }
+#airQualityCircle{
+    position: relative;
+    top: -0%;
+    left: 11.5%;
+    width: 50%;
+    height: 40%;
+    border-top-left-radius: 50%;
+    border-top-right-radius: 50%;
+    border-top: solid 2vh #Ffc508;
+    border-left: solid 2vh darkolivegreen;
+    border-right: solid 2vh darkred;
+}
+#wid2 h1{
+    position: relative;
+    top: -4%;
+    left: -10%;
+    color: var(--textSemi);
+    font-size: 1.2vw;
+}
+#airQualityPointer{
+    position: relative;
+    top: 100%;
+    left: -50%;
+    width: 200%;
+    height: 5%;
+    background-image: linear-gradient(to left, rgba(255,255,255, 0) 50%, rgba(255,255,255, 1) 50%);
+    transition: transform 1s ease;
+}
+
 #wid3{
     background-color: var(--mainContentBox);
     font-size: 3vw;
@@ -475,10 +511,10 @@ a:active{
     background-color: black;
     position: relative;
     top: -20%;
-    left: 70%;
     border-radius: 2vh;
     width: 5%;
     height: 140%;
+    transition: left 1s ease;
 }
 
 #wid4{

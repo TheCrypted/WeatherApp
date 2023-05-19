@@ -17,6 +17,11 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let currentTime = new Date();
     let loadingHome = document.getElementById("loadingHomeForecast");
     let heading = document.getElementById("heading");
+    let pointerCompass = document.getElementById("pointerCompass");
+    let UVdiv = document.getElementById("wid3");
+    let airQualityPointer = document.getElementById("airQualityPointer");
+    let humidityDiv = document.getElementById("wid4")
+    const link = document.querySelector("link[rel~='icon']");
     let homeForecast;
     let API_KEY;
     let heatmap = false;
@@ -35,19 +40,48 @@ document.addEventListener("DOMContentLoaded", ()=>{
         screenBack.style.left = (0.065 * window.innerWidth - shiftX / 2) + "px";
         screenBack.style.top = (0.06 * window.innerHeight - shiftY / 2) + "px";
     }
+    function rotateCompass(deg){
+        pointerCompass.style.transform = "rotate(" + deg + "deg)"
+    }
+    function airQualUpdate(airObj){
+        // console.log(airObj)
+        // const AQI = airObj.co/9 + airObj.no2/0.08 + airObj.o3/0.065 + airObj.pm2_5/25 + airObj.pm10/50
+        // console.log(AQI)
+        let rotationDeg = airObj["gb-defra-index"]/10 * 180
+        airQualityPointer.style.transform = "rotate(" + rotationDeg + "deg)"
+    }
+    function uvUpdate(uvIndex){
+        let leftShift = Math.floor(uvIndex)/12 * 100
+        UVdiv.innerHTML = "<h1><b>UV INDEX</b></h1><br>" + Math.floor(uvIndex) + "\n" +
+            "                                <div id=\"uvIndex\">\n" +
+            "                                    <div id=\"pointerUV\"></div>\n" +
+            "                                </div>"
+        let pointerUV = document.getElementById("pointerUV")
+        pointerUV.style.left = leftShift + "%";
+    }
+    function humidityUpdate(humidity, expectedRain){
+        humidityDiv.innerHTML = "<h1><b>HUMIDITY</b></h1><br>" + humidity + "%<br><h3><b>Expected rain:</b> " +  
+            Math.round(expectedRain)+ " mm</h3>"
+    }
     function fetchLocationPage(location){
-        fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHERE&q="+ location + "&days=2&aqi=no&alerts=no")
+        fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHERE&q="+ location + "&days=2&aqi=yes&alerts=no")
             .then(response => response.json())
             .then(object => {
-                let {forecast:{forecastday}} = object
+                let {current, forecast:{forecastday}} = object
                 let {hour} = forecastday[0]
                 let {hour: hourNext} = forecastday[1]
                 let {location:{name, country, localtime}} = object;
                 let now = parseInt(localtime.split(" ").at(-1).split(":")[0])
-                heading.innerHTML = "<div id='temperatureCurrent'>" + Math.round(hour[0].temp_c)+"°C</div><div><h1 id=\"Location\">"+ name+ ", </h1><h2>"+ country+ "</h2></div>\n" +
+                heading.innerHTML = "<div id='temperatureCurrent'>" + Math.round(current.temp_c)+"°C</div><div><h1 id=\"Location\">"+ name+ ", </h1><h2>"+ country+ "</h2></div>\n" +
                     "                    <div id=\"rightClock\"><h1>"+ localtime.split(" ").at(-1) +"</h1>\n" +
                     "                        <div id=\"heatmapSwitch\">Show heatmap</div>";
                 let heatButton = document.getElementById("heatmapSwitch");
+                link.href = current.condition.icon
+                //Updating all widgets
+                rotateCompass(current.wind_degree)
+                airQualUpdate(current.air_quality)
+                uvUpdate(current.uv)
+                humidityUpdate(current.humidity, current.precip_mm)
                 function addDiv(weatherInformation, tempC){
                     weatherInformation.setAttribute("data-value", tempC.toString())
                     weatherInformation.addEventListener("mouseenter", ()=>{
