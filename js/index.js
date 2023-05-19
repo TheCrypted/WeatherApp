@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let UVdiv = document.getElementById("wid3");
     let airQualityPointer = document.getElementById("airQualityPointer");
     let humidityDiv = document.getElementById("wid4")
+    let loadingWidgets = document.getElementsByClassName("loadingWidget");
     const link = document.querySelector("link[rel~='icon']");
     let homeForecast;
     let API_KEY;
@@ -52,7 +53,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
     function uvUpdate(uvIndex){
         let leftShift = Math.floor(uvIndex)/12 * 100
-        UVdiv.innerHTML = "<h1><b>UV INDEX</b></h1><br>" + Math.floor(uvIndex) + "\n" +
+        UVdiv.innerHTML = "<div class=\"loadingWidget\"></div><h1><b>UV INDEX</b></h1><br>" + Math.floor(uvIndex) + "\n" +
             "                                <div id=\"uvIndex\">\n" +
             "                                    <div id=\"pointerUV\"></div>\n" +
             "                                </div>"
@@ -60,10 +61,18 @@ document.addEventListener("DOMContentLoaded", ()=>{
         pointerUV.style.left = leftShift + "%";
     }
     function humidityUpdate(humidity, expectedRain){
-        humidityDiv.innerHTML = "<h1><b>HUMIDITY</b></h1><br>" + humidity + "%<br><h3><b>Expected rain:</b> " +  
+        humidityDiv.innerHTML = "<div class=\"loadingWidget\"></div><h1><b>HUMIDITY</b></h1><br>" + humidity + "%<br><h3><b>Expected rain:</b> " +  
             Math.round(expectedRain)+ " mm</h3>"
     }
+    function loadWidget(){
+        humidityDiv.innerHTML = "<div class=\"loadingWidget\"></div>"
+        UVdiv.innerHTML = "<div class=\"loadingWidget\"></div>"
+        for(let load of loadingWidgets){
+            load.style.display = "block"
+        }
+    }
     function fetchLocationPage(location){
+        loadWidget()
         fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHERE&q="+ location + "&days=2&aqi=yes&alerts=no")
             .then(response => response.json())
             .then(object => {
@@ -81,7 +90,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 rotateCompass(current.wind_degree)
                 airQualUpdate(current.air_quality)
                 uvUpdate(current.uv)
+                loadingWidgets[0].style.display = "none"
                 humidityUpdate(current.humidity, current.precip_mm)
+                loadingWidgets[1].style.display = "none"
                 function addDiv(weatherInformation, tempC){
                     weatherInformation.setAttribute("data-value", tempC.toString())
                     weatherInformation.addEventListener("mouseenter", ()=>{
@@ -142,9 +153,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         if(event.key === "Enter"){
             mainDisplay.innerHTML = "";
             loadingHome.style.display = "block"
-            // setTimeout(()=>{fetchLocationPage(inputLocation.value)}, 3000)
             fetchLocationPage(inputLocation.value)
-            loadingHome.style.display = "none"
         }
     })
     inputLocation.addEventListener("focus", ()=>{

@@ -539,3 +539,16 @@ a:active{
     top: 10%;
     font-size: 1.1vw;
 }
+.loadingWidget{
+    position: relative;
+    left: 32.5%;
+    top: 30%;
+    width: 6vh;
+    height: 6vh;
+    border-radius: 50%;
+    border-bottom: 1.5vh solid darkred;
+    border-left: 1.5vh solid darkolivegreen;
+    border-right: 1.5vh solid cornflowerblue;
+    border-top: 1.5vh solid coral;
+    animation: spin 1.5s linear infinite;
+}
