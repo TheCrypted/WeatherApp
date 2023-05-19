@@ -36,7 +36,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
         screenBack.style.top = (0.06 * window.innerHeight - shiftY / 2) + "px";
     }
     function fetchLocationPage(location){
-        fetch("https://api.weatherapi.com/v1/forecast.json?key=e3b7fc6bd5fc457e91b202223231605&q="+ location + "&days=2&aqi=no&alerts=no")
+        fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHERE&q="+ location + "&days=2&aqi=no&alerts=no")
             .then(response => response.json())
             .then(object => {
                 let {forecast:{forecastday}} = object
