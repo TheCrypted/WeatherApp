@@ -24,17 +24,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let videoBackground = document.getElementById("testA")
     let video = document.getElementById("container")
     let loadingWidgets = document.getElementsByClassName("loadingWidget");
+    let pointerAstro = document.getElementById("pointerAst");
     const link = document.querySelector("link[rel~='icon']");
     let homeForecast;
     let heatmap = false;
-    // if(navigator.geolocation){
-    //     navigator.geolocation.getCurrentPosition(function(position){
-    //         const latitude = position.coords.latitude;
-    //         const longitude = position.coords.longitude;
-    //         // userLocation = latitude + "," + longitude;
-    //         console.log("check")
-    //     })
-    // }
     function resizeWindow(){
         let shiftY = Math.floor(0.3 * (841 - window.innerHeight))
         let shiftX = Math.floor(0.45 * (1707 - window.innerWidth))
@@ -76,7 +69,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function updateBackground(currentText, isMoonUp){
         console.log(currentText)
         let condition = currentText.split(" ")
-        let day = isMoonUp===1 ? "night" : "day"
+        let day = isMoonUp===0 ? "night" : "day"
         let conditionURL;
         if(condition.length === 1){
             switch (condition[0].toLowerCase()){
@@ -114,6 +107,28 @@ document.addEventListener("DOMContentLoaded", ()=>{
         videoBackground.src = "img/" + day + "/" + conditionURL + ".mp4";
         video.load()
     }
+    function timeToMin(localTime) {
+        return parseInt(localTime.split(":")[0])*60 + parseInt(localTime.split(":")[1]);
+    }
+    function updateAstro(astro, localTime){
+        let localMin = timeToMin(localTime)
+        let sunRise = astro.sunrise.split(" ")[0];
+        let sunSet = astro.sunset.split(" ")[0]
+        let sunRiseMin = timeToMin(sunRise)
+        let sunSetMin = (parseInt(sunSet.split(":")[0])+12)*60 + parseInt(sunSet.split(":")[1])
+        if(localMin<=sunSetMin && localMin>=sunRiseMin) {
+            let movePercent = ((localMin-sunRiseMin)/(sunSetMin - sunRiseMin)) * 47;
+            pointerAstro.style.left = (22 + movePercent) + "%";
+        } else if(localMin >= sunSetMin){
+            let halfNight = (24*60 - (sunSetMin-sunRiseMin))/2
+            let movePercent = ((localMin-sunSetMin)/halfNight)*25
+            pointerAstro.style.left = (70 + movePercent) + "%";
+        } else{
+            let halfNight = (24*60 - (sunSetMin-sunRiseMin))/2
+            let movePercent = ((localMin)/halfNight)*25
+            pointerAstro.style.left = (70 + movePercent) + "%";
+        }
+    }
     function fetchLocationPage(location){
         loadWidget()
         fetch("https://api.weatherapi.com/v1/forecast.json?key=" + API_KEY + "&q="+ location + "&days=2&aqi=yes&alerts=no")
@@ -130,7 +145,9 @@ document.addEventListener("DOMContentLoaded", ()=>{
                 let heatButton = document.getElementById("heatmapSwitch");
                 link.href = current.condition.icon
                 //update background
-                updateBackground(current.condition.text, astro.is_moon_up)
+                updateBackground(current.condition.text, astro.is_sun_up)
+                //update Astro Widget
+                updateAstro(astro, localtime.split(" ").at(-1))
                 //Updating all widgets
                 rotateCompass(current.wind_degree)
                 airQualUpdate(current.air_quality)
