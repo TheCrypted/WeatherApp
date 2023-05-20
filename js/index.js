@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let currentLink = document.getElementById("current");
     let xScrollFirst = document.getElementById("temp");
     let mainDisplay = document.getElementById("mainDisplay");
-    let userLocation = "Dubai";
+    let userLocation = "delhi";
     let currentTime = new Date();
     let loadingHome = document.getElementById("loadingHomeForecast");
     let heading = document.getElementById("heading");
@@ -24,15 +24,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let loadingWidgets = document.getElementsByClassName("loadingWidget");
     const link = document.querySelector("link[rel~='icon']");
     let homeForecast;
-    let API_KEY;
     let heatmap = false;
-    if(navigator.geolocation){
-        navigator.geolocation.getCurrentPosition(function(position){
-            const latitude = position.coords.latitude;
-            const longitude = position.coords.longitude;
-            userLocation = latitude + "," + longitude;
-        })
-    }
+    // if(navigator.geolocation){
+    //     navigator.geolocation.getCurrentPosition(function(position){
+    //         const latitude = position.coords.latitude;
+    //         const longitude = position.coords.longitude;
+    //         // userLocation = latitude + "," + longitude;
+    //         console.log("check")
+    //     })
+    // }
     function resizeWindow(){
         let shiftY = Math.floor(0.3 * (841 - window.innerHeight))
         let shiftX = Math.floor(0.45 * (1707 - window.innerWidth))
@@ -73,7 +73,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     }
     function fetchLocationPage(location){
         loadWidget()
-        fetch("https://api.weatherapi.com/v1/forecast.json?key=APIKEYHERE&q="+ location + "&days=2&aqi=yes&alerts=no")
+        fetch("https://api.weatherapi.com/v1/forecast.json?key=" + API_KEY + "&q="+ location + "&days=2&aqi=yes&alerts=no")
             .then(response => response.json())
             .then(object => {
                 let {current, forecast:{forecastday}} = object
@@ -148,7 +148,15 @@ document.addEventListener("DOMContentLoaded", ()=>{
             })
             .catch(error => console.log(error))
     }
-    fetchLocationPage(userLocation);
+    if (navigator.geolocation) {
+        navigator.geolocation.getCurrentPosition(function (position) {
+            const latitude = position.coords.latitude;
+            const longitude = position.coords.longitude;
+            userLocation = latitude + "," + longitude;
+            fetchLocationPage(userLocation);
+        })
+    }
+    
     inputLocation.addEventListener("keydown", (event) => {
         if(event.key === "Enter"){
             mainDisplay.innerHTML = "";
