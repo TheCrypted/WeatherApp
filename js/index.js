@@ -13,7 +13,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let currentLink = document.getElementById("current");
     let xScrollFirst = document.getElementById("temp");
     let mainDisplay = document.getElementById("mainDisplay");
-    let userLocation = "delhi";
+    let userLocation = "Dubai";
     let currentTime = new Date();
     let loadingHome = document.getElementById("loadingHomeForecast");
     let heading = document.getElementById("heading");
@@ -21,6 +21,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let UVdiv = document.getElementById("wid3");
     let airQualityPointer = document.getElementById("airQualityPointer");
     let humidityDiv = document.getElementById("wid4")
+    let videoBackground = document.getElementById("testA")
+    let video = document.getElementById("container")
     let loadingWidgets = document.getElementsByClassName("loadingWidget");
     const link = document.querySelector("link[rel~='icon']");
     let homeForecast;
@@ -71,13 +73,54 @@ document.addEventListener("DOMContentLoaded", ()=>{
             load.style.display = "block"
         }
     }
+    function updateBackground(currentText, isMoonUp){
+        console.log(currentText)
+        let condition = currentText.split(" ")
+        let day = isMoonUp===1 ? "night" : "day"
+        let conditionURL;
+        if(condition.length === 1){
+            switch (condition[0].toLowerCase()){
+                case "clear":
+                case "sunny":
+                    conditionURL = "clear"
+                    break;
+                case "overcast":
+                    conditionURL = "cloudy"
+                    break;
+                case "mist":
+                    conditionURL = "mist"
+                    break;
+                default:
+                    conditionURL = "sunny";
+            }
+        } else{
+            switch (condition[1].toLowerCase()){
+                case "cloudy":
+                    conditionURL = "cloudy"
+                    break;
+                case "light":
+                case "drizzle":
+                case "or":
+                case "rain":
+                    conditionURL = "rain"
+                    break;
+                case "outbreaks":
+                    conditionURL = "thunder"
+                    break;
+                default:
+                    conditionURL = "sunny";
+            }
+        }
+        videoBackground.src = "img/" + day + "/" + conditionURL + ".mp4";
+        video.load()
+    }
     function fetchLocationPage(location){
         loadWidget()
         fetch("https://api.weatherapi.com/v1/forecast.json?key=" + API_KEY + "&q="+ location + "&days=2&aqi=yes&alerts=no")
             .then(response => response.json())
             .then(object => {
                 let {current, forecast:{forecastday}} = object
-                let {hour} = forecastday[0]
+                let {astro, hour} = forecastday[0]
                 let {hour: hourNext} = forecastday[1]
                 let {location:{name, country, localtime}} = object;
                 let now = parseInt(localtime.split(" ").at(-1).split(":")[0])
@@ -86,6 +129,8 @@ document.addEventListener("DOMContentLoaded", ()=>{
                     "                        <div id=\"heatmapSwitch\">Show heatmap</div>";
                 let heatButton = document.getElementById("heatmapSwitch");
                 link.href = current.condition.icon
+                //update background
+                updateBackground(current.condition.text, astro.is_moon_up)
                 //Updating all widgets
                 rotateCompass(current.wind_degree)
                 airQualUpdate(current.air_quality)
