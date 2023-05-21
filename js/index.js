@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     let loadingWidgets = document.getElementsByClassName("loadingWidget");
     let pointerAstro = document.getElementById("pointerAst");
     const link = document.querySelector("link[rel~='icon']");
+    let matchupTab = document.getElementById("sportsCont")
     let homeForecast;
     let heatmap = false;
     function resizeWindow(){
@@ -69,7 +70,7 @@ document.addEventListener("DOMContentLoaded", ()=>{
     function updateBackground(currentText, isMoonUp){
         console.log(currentText)
         let condition = currentText.split(" ")
-        let day = isMoonUp===0 ? "night" : "day"
+        let day = isMoonUp===false ? "night" : "day"
         let conditionURL;
         if(condition.length === 1){
             switch (condition[0].toLowerCase()){
@@ -116,18 +117,76 @@ document.addEventListener("DOMContentLoaded", ()=>{
         let sunSet = astro.sunset.split(" ")[0]
         let sunRiseMin = timeToMin(sunRise)
         let sunSetMin = (parseInt(sunSet.split(":")[0])+12)*60 + parseInt(sunSet.split(":")[1])
+        let halfNight = (24*60 - (sunSetMin-sunRiseMin))/2
         if(localMin<=sunSetMin && localMin>=sunRiseMin) {
             let movePercent = ((localMin-sunRiseMin)/(sunSetMin - sunRiseMin)) * 47;
             pointerAstro.style.left = (22 + movePercent) + "%";
+            return true
         } else if(localMin >= sunSetMin){
-            let halfNight = (24*60 - (sunSetMin-sunRiseMin))/2
-            let movePercent = ((localMin-sunSetMin)/halfNight)*25
+            let movePercent = ((localMin - sunSetMin) / halfNight) * 25
             pointerAstro.style.left = (70 + movePercent) + "%";
         } else{
-            let halfNight = (24*60 - (sunSetMin-sunRiseMin))/2
             let movePercent = ((localMin)/halfNight)*25
-            pointerAstro.style.left = (70 + movePercent) + "%";
+            pointerAstro.style.left = (movePercent) + "%";
         }
+        return false
+    }
+    
+    function teamAcronym(team){
+        let teamNames = team.split(" ")
+        console.log(teamNames.toString())
+        if(teamNames.length === 1){
+            return teamNames[0].slice(0, 3)
+        } else if(teamNames.length === 2){
+            if(teamNames[0].toUpperCase() === teamNames[0]){
+                if(teamNames[0].length === 3){
+                    return teamNames[0]
+                } else {
+                    return teamNames[0] + teamNames[1].charAt(0)
+                }
+            } else {
+                return teamNames[0].charAt(0) + teamNames[1].slice(0, 2)
+            }
+        } else{
+            let output = "";
+            let count = 0;
+            for( let word of teamNames){
+                output = output + word.charAt(0)
+                count++;
+                if(count === 3){
+                    return output;
+                }
+            }
+        }
+    }
+    function matchElement(match, index){
+        let matchup = document.createElement("div");
+        matchup.id = "index"
+        matchup.className = "matchup";
+        matchup.innerHTML = "<div class=\"league\">" + match.tournament + ", " + match.country + "," + match.start.split(" ").at(0) + "</div>\n" +
+            "                                <div class=\"teamA\"><b>" + teamAcronym(match.match.split(" vs ")[0]).toUpperCase() + "</b></div>\n" +
+            "                                <div class=\"timeMatch\">" + match.start.split(" ").at(-1) + "</div>\n" +
+            "                                <div class=\"teamB\"><b>" + teamAcronym(match.match.split(" vs ")[1]).toUpperCase() + "</b></div>"
+        matchupTab.appendChild(matchup)
+    }
+    function updateMatchups(userLocation){
+        fetch("http://api.weatherapi.com/v1/sports.json?key=" + API_KEY + "&q=" + userLocation)
+            .then(response => response.json())
+            .then(sports => {
+                let {football: footballList} = sports;
+                let {cricket: cricketList} = sports;
+                let index = 0
+                for(let match of footballList){
+                    if (match.tournament === "Spanish La Liga" || match.tournament === "Premier League" || match.tournament === "Italian Serie A"){
+                        matchElement(match, index)
+                        index++;
+                    }
+                }
+                for (let match of cricketList){
+                    matchElement(match, index)
+                    index++;
+                }
+            })
     }
     function fetchLocationPage(location){
         loadWidget()
@@ -144,10 +203,10 @@ document.addEventListener("DOMContentLoaded", ()=>{
                     "                        <div id=\"heatmapSwitch\">Show heatmap</div>";
                 let heatButton = document.getElementById("heatmapSwitch");
                 link.href = current.condition.icon
-                //update background
-                updateBackground(current.condition.text, astro.is_sun_up)
                 //update Astro Widget
-                updateAstro(astro, localtime.split(" ").at(-1))
+                isSunUp = updateAstro(astro, localtime.split(" ").at(-1))
+                //update background
+                updateBackground(current.condition.text, isSunUp)
                 //Updating all widgets
                 rotateCompass(current.wind_degree)
                 airQualUpdate(current.air_quality)
@@ -218,6 +277,23 @@ document.addEventListener("DOMContentLoaded", ()=>{
             fetchLocationPage(userLocation);
         })
     }
+    //Updating matchups
+    updateMatchups(userLocation)
+    let matchups = document.getElementsByClassName("matchup");
+    let i = 0;
+        matchupTab.addEventListener("wheel", (event) =>{
+            event.preventDefault();
+            if(event.deltaY > 0){
+                let div = matchups[i+1]
+                // console.log(div.className)
+                div.scrollIntoView({behavior: "smooth"})
+                i++;
+            } else if(event.deltaY < 0){
+                let div = matchups[i-1]
+                div.scrollIntoView({behavior: "smooth"})
+                i--;
+            }
+        })
     
     inputLocation.addEventListener("keydown", (event) => {
         if(event.key === "Enter"){

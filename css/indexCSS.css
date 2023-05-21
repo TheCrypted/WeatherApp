@@ -20,7 +20,7 @@ html, body {
 }
 
 #container{
-    position: absolute;
+    /*position: absolute;*/
     top: 0;
     left: 0;
     /*min-width: 100vw;*/
@@ -382,13 +382,7 @@ a:active{
     border-radius: 2vh;
     background-color: var(--mainContentBox);
 }
-#astronomyOverview div{
-    width: 90%;
-    height: 60%;
-    box-shadow: var(--mainBoxShadow);
-    border-radius: 2vh;
-    background-color: var(--mainContentBox);
-}
+
 #secondaryDisplay h1{
     color: var(--textSemi);
     box-sizing: border-box;
@@ -399,7 +393,7 @@ a:active{
     height: 80%;
     margin: 4% 5% 2.5% 5%;
     display: grid;
-    grid-template-rows: 1fr 1fr;
+    grid-template-rows: 51% 47%;
     grid-template-columns: 1fr 1fr;
     grid-template-areas:
         "currentOverview airOverview"
@@ -604,4 +598,71 @@ a:active{
     top: -500%;
     left: 95%;/*23 to 70*/
     transition: left 1s ease;
+}
+#sportsCont{
+    position: relative;
+    width: 90%;
+    height: 58%;
+    box-shadow: var(--mainBoxShadow);
+    border-radius: 2vh;
+    background-color: var(--mainContentBox);
+    overflow-y: auto;
+}
+#sportsCont::-webkit-scrollbar{
+    width: 0vh;
+}
+.matchup{
+    display: grid;
+    grid-template-rows: 20% 80%;
+    grid-template-columns: 30% 40% 30%;
+    grid-template-areas:
+            "league league league"
+            "teamA timeMatch teamB";
+}
+.matchup{
+    width: 100%;
+    height: 100%;
+}
+.teamA{
+    display: grid;
+    place-items: center;
+    font-size: 4vh;
+    text-align: center;
+    color: var(--textSemi);
+    border-radius: 2vh;
+    grid-area: teamA;
+}
+.teamB{
+    display: grid;
+    place-items: center;
+    font-size: 4vh;
+    text-align: center;
+    color: var(--textSemi);
+    border-radius: 2vh;
+    grid-area: teamB;
+}
+.league{
+    grid-area: league;
+    text-align: center;
+    font-size: 1.1vw;
+    background-color: darkgoldenrod;
+    border-top-left-radius: 2vh;
+    border-top-right-radius: 2vh;
+    color: var(--textFocused);
+}
+.timeMatch{
+    display: grid;
+    place-items: center;
+    text-align: center;
+    border-radius: 2vh;
+    grid-area: timeMatch;
+    place-content: center;
+    position: relative;
+    top: 15%;
+    height: 60%;
+    box-sizing: border-box;
+    padding-bottom: 5%;
+    color: var(--textFocused);
+    background-color: var(--mainContentBox);
+    font-size: 8vh;
 }
