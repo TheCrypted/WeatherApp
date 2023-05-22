@@ -323,4 +323,17 @@ document.addEventListener("DOMContentLoaded", ()=>{
     window.addEventListener("resize", ()=>{
         resizeWindow()
     })
+    let modeSwitches = document.getElementsByClassName("optionsCMZ")
+    let darkMode = true
+    for(let mode of modeSwitches){
+        mode.addEventListener("mousedown", () => {
+            if(darkMode){
+                document.documentElement.classList.add("lightMode")
+                darkMode = false
+            } else{
+                document.documentElement.classList.remove("lightMode")
+                darkMode = true
+            }
+        })
+    }
 })

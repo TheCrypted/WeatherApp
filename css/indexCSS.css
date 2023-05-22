@@ -7,6 +7,15 @@
     --mainContentBox: rgba(255, 255, 255, 0.07);
     --mainBoxShadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
 }
+.lightMode{
+    --backgroundContainer: rgba(255, 255, 255, 0.3);
+    --textFocused: rgba(0, 0, 0, 1);
+    --textDormant: rgba(0, 0, 0, 0.7);
+    --backgroundSolid: rgba(215, 215, 215, 1);
+    --textSemi: rgba(0, 0, 0, 0.5);
+    --mainContentBox: rgba(0, 0, 0, 0.15);
+    --mainBoxShadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+}
 
 html, body {
     width: 100%;
